@@ -36,10 +36,10 @@ namespace Quiet_Attic
             textBox4.Text = "";
             textBox5.Text = "";
         }
-
+        // Load initial data when the form loads
         private void Clients_Load(object sender, EventArgs e)
         {
-            // Load initial data when the form loads
+            
             LoadClients();
         }
 
