@@ -18,7 +18,7 @@ namespace Quiet_Attic
         {
             InitializeComponent();
         }
-        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-PD67JB8B\SQLEXPRESS;Initial Catalog=productionDB;Integrated Security=True;Encrypt=False");
+        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-LT4EDDL6;Initial Catalog=film_productiondb;Integrated Security=True");
 
 
         private void Production_Load(object sender, EventArgs e)
@@ -246,6 +246,13 @@ namespace Quiet_Attic
                 comboBox1.Text = row["client_ID"].ToString();
                 textBox2.Text = row["no_of_days"].ToString();
             }
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            Dashboard dashboard = new Dashboard();
+            dashboard.Show();
+            this.Hide();
         }
     }
 }

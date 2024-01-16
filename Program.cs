@@ -16,7 +16,7 @@ namespace Quiet_Attic
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Locations());
+            Application.Run(new Login());
         }
     }
 }
