@@ -16,7 +16,7 @@ namespace Quiet_Attic
         {
             InitializeComponent();
         }
-        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-PD67JB8B\SQLEXPRESS;Initial Catalog=productionDB;Integrated Security=True;Encrypt=False");
+        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-LT4EDDL6;Initial Catalog=film_productiondb;Integrated Security=True");
 
 
         private void label1_Click(object sender, EventArgs e)
@@ -157,7 +157,9 @@ namespace Quiet_Attic
         }
         private void button5_Click(object sender, EventArgs e)
         {
-
+            Dashboard dashboard = new Dashboard();
+            dashboard.Show();
+            this.Hide();
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)

@@ -60,7 +60,7 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(414, 50);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(199, 39);
+            this.label1.Size = new System.Drawing.Size(194, 38);
             this.label1.TabIndex = 0;
             this.label1.Text = "Staff Types";
             // 
@@ -127,6 +127,7 @@
             this.button5.TabIndex = 28;
             this.button5.Text = "Back";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
             // button4
             // 
