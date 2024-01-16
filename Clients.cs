@@ -16,11 +16,7 @@ namespace Quiet_Attic
         {
             InitializeComponent();
         }
-        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-LT4EDDL6;Initial Catalog=film_productiondb;Integrated Security=True");
-
-
-        
-
+        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-PD67JB8B\SQLEXPRESS;Initial Catalog=productionDB;Integrated Security=True;Encrypt=False");
 
 
         private void label1_Click(object sender, EventArgs e)
@@ -170,7 +166,7 @@ namespace Quiet_Attic
         }
         private void LoadClientData(int clientId)
         {
-            // Assuming your text boxes are named textBox1, textBox2, textBox3, textBox4, textBox5
+            
             SqlCommand cmd = new SqlCommand("SELECT * FROM Clients WHERE client_ID = @clientId", con);
             cmd.Parameters.AddWithValue("@clientId", clientId);
 
@@ -237,6 +233,11 @@ namespace Quiet_Attic
             {
                 con.Close();
             }
+        }
+
+        private void label6_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
