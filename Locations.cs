@@ -18,15 +18,17 @@ namespace Quiet_Attic
         {
             InitializeComponent();
         }
-        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-LT4EDDL6;Initial Catalog=film_productiondb;Integrated Security=True");
+        // Establishing a connection to the SQL Server database
+        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-PD67JB8B\SQLEXPRESS;Initial Catalog=productionDB;Integrated Security=True;Encrypt=False");
 
 
-
+        // Load events when the Locations form is loaded
         private void Locations_Load(object sender, EventArgs e)
         {
             LoadLocations();
         }
 
+        // Load data into the DataGridView
         private void LoadLocations()
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM Locations", con);
@@ -38,8 +40,10 @@ namespace Quiet_Attic
             dataGridView1.DataSource = table;
         }
 
+        // Click event for the "Select" button
         private void button6_Click(object sender, EventArgs e)
         {
+            // Load data from the selected loaction into textboxes
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 int selectedLocationId = (int)dataGridView1.SelectedRows[0].Cells["location_ID"].Value;
@@ -48,6 +52,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Load data of a specific location into the textboxes
         private void LoadLocationData(int locationId)
         {
 
@@ -70,20 +75,25 @@ namespace Quiet_Attic
             }
         }
 
+        // Click event for the "Back" button
         private void button5_Click(object sender, EventArgs e)
         {
+            // Show the Dashboard form and hide the Location form
             Dashboard dashboard = new Dashboard();
             dashboard.Show();
             this.Hide();
         }
 
+        // Click event for the "Clear" button
         private void button4_Click(object sender, EventArgs e)
         {
+            // Clear textboxes
             textBox1.Text = "";
             textBox2.Text = "";
             textBox3.Text = "";
         }
 
+        // Click event for the "Delete" button
         private void button3_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count == 1)
@@ -98,6 +108,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Delete Location from the database
         private void DeleteLocation(int locationID)
         {
             try
@@ -107,6 +118,7 @@ namespace Quiet_Attic
                     con.Open();
                 }
 
+                // Delete related data from other tables before deleting from Location table
                 string deleteQuery = "DELETE FROM ProductionLocation WHERE location_ID = @locationID;" +
                                      "DELETE FROM Locations WHERE location_ID = @locationID;";
 
@@ -128,7 +140,7 @@ namespace Quiet_Attic
             }
         }
 
-
+        // Click event for the "Update" button
         private void button2_Click(object sender, EventArgs e)
         {
             // Update the selected row with the new data from text boxes
@@ -185,8 +197,10 @@ namespace Quiet_Attic
             }
         }
 
+        // Click event for the "Add" button
         private void button1_Click(object sender, EventArgs e)
         {
+            // Retrieve data from textboxes
             string name = textBox1.Text;
             string address = textBox2.Text;
             string contactNumber = textBox3.Text;
@@ -199,7 +213,7 @@ namespace Quiet_Attic
                     con.Open();
                 }
 
-                // Insert data into Clients table
+                // Insert data into Locations table
                 string insertQuery = "INSERT INTO Locations (name,address, contact_number) " +
                                      "VALUES (@name, @address, @contactNumber);";
                 using (SqlCommand cmd = new SqlCommand(insertQuery, con))

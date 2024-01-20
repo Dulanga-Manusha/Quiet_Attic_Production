@@ -16,7 +16,8 @@ namespace Quiet_Attic
         {
             InitializeComponent();
         }
-        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-LT4EDDL6;Initial Catalog=film_productiondb;Integrated Security=True");
+        // Establishing a connection to the SQL Server database
+        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-PD67JB8B\SQLEXPRESS;Initial Catalog=productionDB;Integrated Security=True;Encrypt=False");
 
 
         private void label1_Click(object sender, EventArgs e)
@@ -24,14 +25,17 @@ namespace Quiet_Attic
 
         }
 
+        // Click event for the "Clear" button
         private void button4_Click(object sender, EventArgs e)
         {
+            // Clear textboxes
             textBox1.Text = "";
             textBox2.Text = "";
             textBox3.Text = "";
             textBox4.Text = "";
             textBox5.Text = "";
         }
+
         // Load initial data when the form loads
         private void Clients_Load(object sender, EventArgs e)
         {
@@ -39,8 +43,10 @@ namespace Quiet_Attic
             LoadClients();
         }
 
+        // Click event for the "Add" button
         private void button1_Click(object sender, EventArgs e)
         {
+            // Retrieve data from textboxes
             string firstName = textBox1.Text;
             string lastName = textBox2.Text;
             string contactNumber = textBox3.Text;
@@ -81,6 +87,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Click event for the "Update" button
         private void button2_Click(object sender, EventArgs e)
         {
             // Update the selected row with the new data from text boxes
@@ -142,6 +149,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Click event for the "Delete" button
         private void button3_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count == 1)
@@ -155,8 +163,10 @@ namespace Quiet_Attic
                 LoadClients();
             }
         }
+        // Click event for the "Back" button
         private void button5_Click(object sender, EventArgs e)
         {
+            // Show the Dashboard form and hide the Clients form
             Dashboard dashboard = new Dashboard();
             dashboard.Show();
             this.Hide();
@@ -166,6 +176,8 @@ namespace Quiet_Attic
         {
             
         }
+
+        // Load data of a specific client into the textboxes
         private void LoadClientData(int clientId)
         {
             
@@ -188,6 +200,8 @@ namespace Quiet_Attic
                 textBox5.Text = row["address"].ToString();
             }
         }
+
+        // Load data into the DataGridView
         private void LoadClients()
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM Clients", con);
@@ -199,8 +213,10 @@ namespace Quiet_Attic
             dataGridView1.DataSource = table;
         }
 
+        // Click event for the "Select" button
         private void button6_Click(object sender, EventArgs e)
         {
+            // Load data from the selected client into textboxes
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 int selectedClientId = (int)dataGridView1.SelectedRows[0].Cells["client_ID"].Value;
@@ -208,6 +224,8 @@ namespace Quiet_Attic
                 LoadClientData(selectedClientId);
             }
         }
+
+        // Delete Client from the database
         private void DeleteClient(int clientId)
         {
             try
@@ -217,7 +235,7 @@ namespace Quiet_Attic
                     con.Open();
                 }
 
-                // Assuming "Clients" is your table name
+                // Delete data from table
                 string deleteQuery = "DELETE FROM Clients WHERE client_ID = @clientId";
                 using (SqlCommand cmd = new SqlCommand(deleteQuery, con))
                 {

@@ -17,16 +17,18 @@ namespace Quiet_Attic
         {
             InitializeComponent();
         }
-        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-LT4EDDL6;Initial Catalog=film_productiondb;Integrated Security=True");
+        // Establishing a connection to the SQL Server database
+        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-PD67JB8B\SQLEXPRESS;Initial Catalog=productionDB;Integrated Security=True;Encrypt=False");
 
-
+        // Load event when the ProductionLocation form is loaded
         private void ProductionLocation_Load(object sender, EventArgs e)
         {
+            // Load data into DataGridView and ComboBoxes on form load
             LoadProductionLocation();
             LoadProductionIDs();
             LoadLocationIDs();
         }
-
+        // Load production location data into the DataGridView
         private void LoadProductionLocation()
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM ProductionLocation", con);
@@ -38,6 +40,7 @@ namespace Quiet_Attic
             dataGridView1.DataSource = table;
         }
 
+        // Load production IDs into ComboBox1
         private void LoadProductionIDs()
         {
             if (con.State == ConnectionState.Closed)
@@ -58,6 +61,7 @@ namespace Quiet_Attic
             con.Close();
         }
 
+        // Load location IDs into ComboBox2
         private void LoadLocationIDs()
         {
             if (con.State == ConnectionState.Closed)
@@ -78,9 +82,10 @@ namespace Quiet_Attic
             con.Close();
         }
 
+        // Click event for the "Add" button
         private void button1_Click(object sender, EventArgs e)
         {
-            // Insert salary data into the database
+            // Insert production location data into the database
             using (SqlCommand cmd = new SqlCommand("INSERT INTO ProductionLocation (production_ID,location_ID) " + "VALUES (@production_ID, @location_ID)", con))
             {
                 if (con.State == ConnectionState.Closed)
@@ -92,11 +97,11 @@ namespace Quiet_Attic
                 string selectedProductionItem = comboBox1.SelectedItem.ToString();
                 int productionID = ExtractID(selectedProductionItem);
 
-                // Extract ProductionID from the selected item in comboBox1
+                // Extract locationID from the selected item in comboBox1
                 string selectedLocationItem = comboBox2.SelectedItem.ToString();
                 int locationID = ExtractID(selectedLocationItem);
 
-                // Add ProductionID and PropertyID to the parameters
+                // Add ProductionID and locationID to the parameters
                 cmd.Parameters.AddWithValue("@production_ID", productionID);
                 cmd.Parameters.AddWithValue("@location_ID", locationID);
 
@@ -104,9 +109,11 @@ namespace Quiet_Attic
             }
             MessageBox.Show("Data added to the database.");
 
+            // Reset ComboBoxes
             comboBox1.SelectedItem = null;
             comboBox2.SelectedItem = null;
 
+            // Refresh the DataGridView with the updated data
             LoadProductionLocation();
 
             con.Close();
@@ -115,7 +122,7 @@ namespace Quiet_Attic
         // Helper method to extract ID from the concatenated string
         private int ExtractID(string selectedItem)
         {
-            // Assuming the ProductionID is at the beginning of the string and is an integer
+            
             string IDString = selectedItem.Split('-')[0].Trim();
             int iD;
             if (int.TryParse(IDString, out iD))
@@ -124,12 +131,13 @@ namespace Quiet_Attic
             }
             else
             {
-                // Handle the case where the extraction fails (e.g., show an error message)
+                // Handle the case where the extraction fails
                 MessageBox.Show("Error extracting ID.");
-                return -1; // or throw an exception or handle accordingly
+                return -1;
             }
         }
 
+        // Click event for the "Update" button
         private void button2_Click(object sender, EventArgs e)
         {
             // Update the selected row with the new data from text boxes
@@ -139,7 +147,7 @@ namespace Quiet_Attic
                 string selectedProductionItem = comboBox1.SelectedItem.ToString();
                 int productionID = ExtractID(selectedProductionItem);
 
-                // Extract ProductionID from the selected item in comboBox1
+                // Extract LocationID from the selected item in comboBox2
                 string selectedLocationItem = comboBox2.SelectedItem.ToString();
                 int locationID = ExtractID(selectedLocationItem);
 
@@ -151,7 +159,7 @@ namespace Quiet_Attic
                         con.Open();
                     }
 
-                    // Update data in Locations table
+                    // Update data in ProductionLocations table
                     string updateQuery = "UPDATE ProductionLocation SET production_ID = @productionID, " +
                                          "location_ID = @locationID " +
                                          "WHERE production_ID = @currentProductionId AND location_ID = @currentLocationId;";
@@ -189,6 +197,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Click event for the "Delete" button
         private void button3_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count == 1)
@@ -204,6 +213,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Delete production Location from the database
         private void DeleteProductionLocation(int productionId, int locationId)
         {
             try
@@ -233,14 +243,18 @@ namespace Quiet_Attic
             }
         }
 
+        // Click event for the "Clear" button
         private void button4_Click(object sender, EventArgs e)
         {
+            // Reset ComboBoxes
             comboBox1.SelectedItem = null;
             comboBox2.SelectedItem = null;
         }
 
+        // Click event for the "Select" button
         private void button6_Click(object sender, EventArgs e)
         {
+            // Load data from the selected production location into textboxes
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 int selectedProductionId = (int)dataGridView1.SelectedRows[0].Cells["production_ID"].Value;
@@ -251,6 +265,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Load data into ComboBox1 based on the selected production ID
         private void LoadComboBox1Data(int productionId)
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM Productions WHERE production_ID = @productionId", con);
@@ -271,6 +286,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Load data into ComboBox2 based on the location ID
         private void LoadComboBox2Data(int locationId)
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM Locations WHERE location_ID = @locationId", con);
@@ -285,13 +301,15 @@ namespace Quiet_Attic
             {
                 DataRow row = table.Rows[0];
 
-                // Display property_ID + property_type in comboBox2
+                // Display location_ID + name in comboBox2
                 comboBox2.Text = $"{row["location_ID"]} - {row["name"]}";
             }
         }
 
+        // Click event for the "Back" button
         private void button5_Click(object sender, EventArgs e)
         {
+            // Show the Dashboard form and hide the ProductionLocation form
             Dashboard dashboard = new Dashboard();
             dashboard.Show();
             this.Hide();

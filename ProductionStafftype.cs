@@ -17,15 +17,19 @@ namespace Quiet_Attic
         {
             InitializeComponent();
         }
-        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-LT4EDDL6;Initial Catalog=film_productiondb;Integrated Security=True");
+        // Establishing a connection to the SQL Server database
+        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-PD67JB8B\SQLEXPRESS;Initial Catalog=productionDB;Integrated Security=True;Encrypt=False");
 
+        // Load event when the ProductionStafftype form is loaded
         private void ProductionStafftype_Load(object sender, EventArgs e)
         {
+            // Load data into DataGridView and ComboBoxes on form load
             LoadProductionStafftype();
             LoadProductionIDs();
             LoadStaffTypeIDs();
         }
 
+        // Load production staff type data into the DataGridView
         private void LoadProductionStafftype()
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM ProductionStaffType", con);
@@ -37,6 +41,7 @@ namespace Quiet_Attic
             dataGridView1.DataSource = table;
         }
 
+        // Load production IDs into ComboBox1
         private void LoadProductionIDs()
         {
             if (con.State == ConnectionState.Closed)
@@ -57,6 +62,7 @@ namespace Quiet_Attic
             con.Close();
         }
 
+        // Load staff type IDs into ComboBox2
         private void LoadStaffTypeIDs()
         {
             if (con.State == ConnectionState.Closed)
@@ -77,9 +83,10 @@ namespace Quiet_Attic
             con.Close();
         }
 
+        // Click event for the "Add" button
         private void button1_Click(object sender, EventArgs e)
         {
-            // Insert salary data into the database
+            // Insert production staff type data into the database
             using (SqlCommand cmd = new SqlCommand("INSERT INTO ProductionStaffType (production_ID,StaffType_ID,No_of_staff) " + "VALUES (@production_ID, @staffType_ID, @members)", con))
             {
                 if (con.State == ConnectionState.Closed)
@@ -91,13 +98,13 @@ namespace Quiet_Attic
                 string selectedProductionItem = comboBox1.SelectedItem.ToString();
                 int productionID = ExtractID(selectedProductionItem);
 
-                // Extract ProductionID from the selected item in comboBox1
+                // Extract StaffTypeID from the selected item in comboBox2
                 string selectedStaffTypeItem = comboBox2.SelectedItem.ToString();
                 int staffTypeID = ExtractID(selectedStaffTypeItem);
 
                 string members = textBox1.Text;
 
-                // Add ProductionID and PropertyID to the parameters
+                // Add ProductionID , StaffTypeID and No_of_staff to the parameters
                 cmd.Parameters.AddWithValue("@production_ID", productionID);
                 cmd.Parameters.AddWithValue("@staffType_ID", staffTypeID);
                 cmd.Parameters.AddWithValue("@members", members);
@@ -106,10 +113,12 @@ namespace Quiet_Attic
             }
             MessageBox.Show("Data added to the database.");
 
+            // Reset ComboBoxes and TextBox
             comboBox1.SelectedItem = null;
             comboBox2.SelectedItem = null;
             textBox1.Text = "";
 
+            // Refresh the DataGridView with the updated data
             LoadProductionStafftype();
 
             con.Close();
@@ -118,7 +127,7 @@ namespace Quiet_Attic
         // Helper method to extract ID from the concatenated string
         private int ExtractID(string selectedItem)
         {
-            // Assuming the ProductionID is at the beginning of the string and is an integer
+            
             string IDString = selectedItem.Split('-')[0].Trim();
             int iD;
             if (int.TryParse(IDString, out iD))
@@ -127,22 +136,23 @@ namespace Quiet_Attic
             }
             else
             {
-                // Handle the case where the extraction fails (e.g., show an error message)
+                // Handle the case where the extraction fails 
                 MessageBox.Show("Error extracting ID.");
-                return -1; // or throw an exception or handle accordingly
+                return -1;
             }
         }
 
+        // Click event for the "Update" button
         private void button2_Click(object sender, EventArgs e)
         {
             // Update the selected row with the new data from text boxes
             if (dataGridView1.SelectedRows.Count > 0)
             {
-                // Extract ProductionID from the selected item in comboBox1
+                // Extract ProductionID from the selected item in comboBox
                 string selectedProductionItem = comboBox1.SelectedItem.ToString();
                 int productionID = ExtractID(selectedProductionItem);
 
-                // Extract ProductionID from the selected item in comboBox1
+                // Extract StaffTypeID from the selected item in comboBox2
                 string selectedStaffTypeItem = comboBox2.SelectedItem.ToString();
                 int staffTypeID = ExtractID(selectedStaffTypeItem);
 
@@ -156,7 +166,7 @@ namespace Quiet_Attic
                         con.Open();
                     }
 
-                    // Update data in Locations table
+                    // Update data in ProductionStaffType table
                     string updateQuery = "UPDATE ProductionStaffType SET production_ID = @productionID, " +
                                          "StaffType_ID = @staffTypeID, " +
                                          "No_of_staff = @members " +
@@ -197,6 +207,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Click event for the "Delete" button
         private void button3_Click(object sender, EventArgs e)
         {
             if (dataGridView1.SelectedRows.Count == 1)
@@ -212,6 +223,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Delete production staff type from the database
         private void DeleteProductionStaffType(int productionId, int staffTypeId)
         {
             try
@@ -241,15 +253,19 @@ namespace Quiet_Attic
             }
         }
 
+        // Click event for the "Clear" button
         private void button4_Click(object sender, EventArgs e)
         {
+            // Reset ComboBoxes and TextBox
             comboBox1.SelectedItem = null;
             comboBox2.SelectedItem = null;
             textBox1.Text = "";
         }
 
+        // Click event for the "Select" button
         private void button6_Click(object sender, EventArgs e)
         {
+            // Load data from the selected production staff type into textboxes
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 int selectedProductionId = (int)dataGridView1.SelectedRows[0].Cells["production_ID"].Value;
@@ -263,6 +279,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Load data into ComboBox1 based on the selected production ID
         private void LoadComboBox1Data(int productionId)
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM Productions WHERE production_ID = @productionId", con);
@@ -283,6 +300,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Load data into ComboBox2 based on the selected staff type ID
         private void LoadComboBox2Data(int StaffTypeId)
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM StaffTypes WHERE StaffType_ID = @StaffTypeId", con);
@@ -297,13 +315,15 @@ namespace Quiet_Attic
             {
                 DataRow row = table.Rows[0];
 
-                // Display property_ID + property_type in comboBox2
+                // Display StaffType_ID + Staff_type in comboBox2
                 comboBox2.Text = $"{row["StaffType_ID"]} - {row["Staff_type"]}";
             }
         }
 
+        // Click event for the "Back" button
         private void button5_Click(object sender, EventArgs e)
         {
+            // Show the Dashboard form and hide the ProductionStafftype form
             Dashboard dashboard = new Dashboard();
             dashboard.Show();
             this.Hide();

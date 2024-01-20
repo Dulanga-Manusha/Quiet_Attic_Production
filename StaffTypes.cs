@@ -18,14 +18,16 @@ namespace Quiet_Attic
         {
             InitializeComponent();
         }
-        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-LT4EDDL6;Initial Catalog=film_productiondb;Integrated Security=True");
+        // Establishing a connection to the SQL Server database
+        SqlConnection con = new SqlConnection(@"Data Source=LAPTOP-PD67JB8B\SQLEXPRESS;Initial Catalog=productionDB;Integrated Security=True;Encrypt=False");
 
-
+        // Load events when the StaffTypes form is loaded
         private void StaffTypes_Load(object sender, EventArgs e)
         {
             LoadStaffTypes();
         }
 
+        // Load data into the DataGridView
         private void LoadStaffTypes()
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM StaffTypes", con);
@@ -37,8 +39,10 @@ namespace Quiet_Attic
             dataGridView1.DataSource = table;
         }
 
+        // Click event for the "Add" button
         private void button1_Click(object sender, EventArgs e)
         {
+            // Retrieve data from textboxes
             string StaffType = textBox1.Text;
             string fee = textBox2.Text;
 
@@ -50,7 +54,7 @@ namespace Quiet_Attic
                     con.Open();
                 }
 
-                // Insert data into Clients table
+                // Insert data into StaffTypes table
                 string insertQuery = "INSERT INTO StaffTypes (Staff_type,fee) " +
                                      "VALUES (@StaffType, @fee);";
                 using (SqlCommand cmd = new SqlCommand(insertQuery, con))
@@ -74,7 +78,7 @@ namespace Quiet_Attic
             }
         }
 
-
+        // Click event for the "Update" button
         private void button2_Click(object sender, EventArgs e)
         {
             // Update the selected row with the new data from text boxes
@@ -91,7 +95,7 @@ namespace Quiet_Attic
                         con.Open();
                     }
 
-                    // Update data in Locations table
+                    // Update data in StaffTypes table
                     string updateQuery = "UPDATE StaffTypes SET Staff_type = @staffType, " +
                                          "fee = @fee " +
                                          "WHERE StaffType_ID = @staffTypeID;";
@@ -128,7 +132,7 @@ namespace Quiet_Attic
             }
         }
 
-
+        // Click event for the "Delete" button
         private void button3_Click(object sender, EventArgs e)
         {
 
@@ -144,6 +148,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Delete StaffType from the database
         private void DeleteStaffType(int staffTypeID)
         {
             try
@@ -152,7 +157,7 @@ namespace Quiet_Attic
                 {
                     con.Open();
                 }
-
+                // Delete related data from other tables before deleting from StaffTypes table
                 string deleteQuery = "DELETE FROM ProductionStaffType WHERE StaffType_ID = @staffTypeID;" +
                                      "DELETE FROM StaffTypes WHERE StaffType_ID = @staffTypeID";
                 using (SqlCommand cmd = new SqlCommand(deleteQuery, con))
@@ -173,14 +178,18 @@ namespace Quiet_Attic
             }
         }
 
+        // Click event for the "Clear" button
         private void button4_Click(object sender, EventArgs e)
         {
+            // Clear textboxes
             textBox1.Text = "";
             textBox2.Text = "";
         }
 
+        // Click event for the "Select" button
         private void button6_Click(object sender, EventArgs e)
         {
+            // Load data from the selected StaffType into textboxes
             if (dataGridView1.SelectedRows.Count == 1)
             {
                 int selectedId = (int)dataGridView1.SelectedRows[0].Cells["StaffType_ID"].Value;
@@ -189,6 +198,7 @@ namespace Quiet_Attic
             }
         }
 
+        // Load data of a specific Stafftype into the textboxes
         private void LoadStaffTypeData(int staffTypeId)
         {
 
@@ -210,8 +220,10 @@ namespace Quiet_Attic
             }
         }
 
+        // Click event for the "Back" button
         private void button5_Click(object sender, EventArgs e)
         {
+            // Show the Dashboard form and hide the StaffType form
             Dashboard dashboard = new Dashboard();
             dashboard.Show();
             this.Hide();
